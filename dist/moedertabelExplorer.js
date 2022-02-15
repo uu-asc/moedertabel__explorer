@@ -87,7 +87,7 @@ class MoedertabelExplorerBuilder {
     }
 
     updateStart(event) {
-        if (!event.target.matches("[data-navigate]")) { return }
+        if (!event.target.matches("[data-navigate], [data-navigate] span")) { return }
         switch (event.target.dataset.navigate) {
             case "first":
                 this.start = 0
