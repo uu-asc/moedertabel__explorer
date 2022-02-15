@@ -74,12 +74,13 @@ class FiltersRenderer extends ComponentRenderer {
             class="moedertabel__explorer__filters__fields__grid">
             ${this.data.indexNames.map((name, idx) => `<div>${name}<code>${this.data.indexDTypes[idx]}</code></div>
             <div>
-                <input data-filter-target="index-${idx}"></input>
+                <input
+                    data-filter-target="index-${idx}"
+                    placeholder="filter..."></input>
                 <button data-clear-filter>&#215;</button>
             </div>`).join('')}
         </div>`
     }
-
 
     renderLabel(label, cols) {
         let flatColumns = this.data.columns.map(i => i[1])
@@ -94,7 +95,9 @@ class FiltersRenderer extends ComponentRenderer {
             class="moedertabel__explorer__filters__fields__grid">
             ${cols.map((col, idx) => `<div>${col}<code>${dtypes[col]}</code></div>
             <div>
-                <input data-filter-target="columns-${flatColumns.indexOf(col)}"></input>
+                <input
+                data-filter-target="columns-${flatColumns.indexOf(col)}"
+                placeholder="filter..."></input>
                 <button data-clear-filter>&#215;</button>
             </div>`).join('')}
         </div>`
