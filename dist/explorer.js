@@ -173,7 +173,7 @@ export class MoedertabelExplorerBuilder {
             let cells = row.querySelectorAll("th[data-index-name]")
             for (let [idx, cell] of Object.entries(cells)) {
                 cell.style.left = `${prev}px`
-                let newWidth = cell.offsetWidth + parseInt(idx) + 1
+                let newWidth = cell.offsetWidth
                 prev += newWidth
             }
             prev = 0
@@ -186,7 +186,7 @@ export class MoedertabelExplorerBuilder {
             let cells = row.querySelectorAll(`th:not(.panel)`)
             for (let [idx, cell] of Object.entries(cells)) {
                 cell.style.left = `${prev}px`
-                let newWidth = cell.offsetWidth + parseInt(idx)
+                let newWidth = cell.offsetWidth
                 prev += newWidth
             }
             prev = 0
