@@ -54,6 +54,7 @@ export class MoedertabelExplorerBuilder {
         let details = this.details.getElement(target)
         let element = this.explorer.querySelector(".moedertabel__explorer__details")
         !!element ? element.replaceWith(details) : this.explorer.append(details)
+        this.hideLabels()
     }
 
     updateData() {
