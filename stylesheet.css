@@ -15,8 +15,8 @@
     font-weight: bold;
     background: gray;
     color: white;
-    border-bottom: 1px solid gray;
-    border-right: 1px solid gray;
+    border-bottom: 1px solid darkslategray;
+    border-right: 4px solid darkslategray;
 }
 
 .moedertabel__explorer .panel span {
@@ -130,8 +130,8 @@
 .moedertabel__explorer__table th,
 .moedertabel__explorer__table td {
     padding: .25rem;
-    border-bottom: 1px solid gray !important;
-    border-right: 1px solid gray !important;
+    border-bottom: 1px solid gray;
+    border-right: 1px solid gray;
 }
 
 /* thead */
