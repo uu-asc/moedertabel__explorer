@@ -10,13 +10,9 @@ export class MoederData {
     }
 
     // INDEX PROPERTIES
-    get index() {
-        return MoederData.getAsArray(this._index)
-    }
+    get index() { return MoederData.getAsArray(this._index) }
 
-    set index(value) {
-        this._index = value
-    }
+    set index(value) { this._index = value }
 
     get indexDTypes() {
         let dtypes = this.dtypes.index
@@ -29,13 +25,9 @@ export class MoederData {
     }
 
     // COLUMN PROPERTIES
-    get columns() {
-        return MoederData.getAsArray(this._columns)
-    }
+    get columns() { return MoederData.getAsArray(this._columns) }
 
-    set columns(value) {
-        this._columns = value
-    }
+    set columns(value) { this._columns = value }
 
     get columnDTypes() {
         let dtypes = this.dtypes.columns
