@@ -9,6 +9,13 @@ export class MoederData {
         this.indexview = spec.index
     }
 
+    // DATA/VIEW PROPERTIES
+    get length() { return this.data.length }
+
+    get lengthView() { return this.dataview.length }
+
+    get isFiltered() { this.lengthView < this.length }
+
     // INDEX PROPERTIES
     get index() { return MoederData.getAsArray(this._index) }
 

@@ -1,16 +1,21 @@
 import {MoederData} from "./data.js"
-import {TableRenderer, TbodyRenderer, DetailsRenderer} from "./components.js"
+import {Table, Info, Tbody, Details} from "./components.js"
 
 
 export class MoedertabelExplorerBuilder {
-    constructor(explorer, data) {
+    constructor(explorer, data, start=0, nrows=25) {
         this.explorer = explorer
         this.data = data
-        this.table = new TableRenderer(data)
-        this.details = new DetailsRenderer(data)
+        this.start = start
+        this.nrows = nrows
+        this.table = new Table(data)
+        this.details = new Details(data)
         this.hiddenLabels = ["moedertabel__explorer__filters"]
-        this.start = 0
-        this.nrows = 25
+    }
+
+    get end() {
+        let end = this.start + this.nrows
+        return end <= this.data.lengthFiltered ? end : this.data.lengthFiltered
     }
 
     get appliedColumnFilters() { return this.getValuesFromInputs(`[data-filter-target^="columns"]`) }
@@ -25,7 +30,7 @@ export class MoedertabelExplorerBuilder {
     }
 
     build() {
-        let table = this.table.getElement()
+        let table = this.table.getElement(this.start, this.nrows)
         this.explorer.appendChild(table)
         this.explorer.addEventListener("change", this.updateNRows.bind(this))
         this.explorer.addEventListener("click", this.updateStart.bind(this))
@@ -49,18 +54,28 @@ export class MoedertabelExplorerBuilder {
 
     showDetails(event) {
         if (!event.target.matches("[data-record-target]")) { return }
-        let target = event.target.dataset.recordTarget
         this.explorer.querySelector(".moedertabel__explorer__records").classList.add("hide")
+        let target = this.getRowNumber(event.target.dataset.recordTarget)
         let details = this.details.getElement(target)
         let element = this.explorer.querySelector(".moedertabel__explorer__details")
         !!element ? element.replaceWith(details) : this.explorer.append(details)
         this.hideLabels()
     }
 
+    getRowNumber(n) {
+        n = parseInt(n)
+        if (n < 0) { return this.nrows - 1 }
+        if (n >= this.nrows) { return 0 }
+        return n
+    }
+
     updateData() {
-        let renderer = new TbodyRenderer(this.data)
+        let tbodyRenderer = new Tbody(this.data)
+        let infoRenderer = new Info(this.data)
         let tbody = this.explorer.querySelector("tbody")
-        tbody.innerHTML = renderer.render(this.start, this.nrows)
+        let info = this.explorer.querySelector(".moedertabel__explorer__info")
+        tbody.innerHTML = tbodyRenderer.render(this.start, this.nrows)
+        info.replaceWith(infoRenderer.getElement(this.start, this.nrows))
         this.fixateHeaders()
         this.hideLabels()
     }
@@ -105,12 +120,12 @@ export class MoedertabelExplorerBuilder {
                 this.start -= this.nrows
                 break
             case "last":
-                this.start = this.data.dataview.length - this.nrows
+                this.start = this.data.lengthFiltered - this.nrows
                 break
         }
         if (this.start < 0) {
             this.start = 0
-        } else if (this.start >= this.data.dataview.length) {
+        } else if (this.start >= this.data.lengthFiltered) {
             this.start = this.start - this.nrows
         }
         this.updateData()

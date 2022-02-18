@@ -1,23 +1,25 @@
 import {ComponentRenderer} from "./renderer.js"
 
 
-export class TableRenderer extends ComponentRenderer {
+export class Table extends ComponentRenderer {
     constructor(data) {
         super(data)
-        this.navigator = new NavigatorRenderer(data)
-        this.filters = new FiltersRenderer(data)
-        this.thead = new TheadRenderer(data)
-        this.tbody = new TbodyRenderer(data)
+        this.navigator = new Navigator(data)
+        this.filters = new Filters(data)
+        this.info = new Info(data)
+        this.thead = new Thead(data)
+        this.tbody = new Tbody(data)
     }
 
-    render() {
+    render(start, nrows) {
         return `<div class="moedertabel__explorer__records">
             ${this.navigator.render()}
             ${this.filters.render()}
+            ${this.info.render(start, nrows)}
             <div class="moedertabel__explorer__table">
             <table>
                 ${this.thead.render()}
-                ${this.tbody.render()}
+                ${this.tbody.render(start, nrows)}
             </table>
             </div>
         </div>`
@@ -25,7 +27,7 @@ export class TableRenderer extends ComponentRenderer {
 }
 
 
-class NavigatorRenderer extends ComponentRenderer {
+class Navigator extends ComponentRenderer {
     render() {
         return `<div class="moedertabel__explorer__navigator">
             <select data-view-nrows>
@@ -45,7 +47,7 @@ class NavigatorRenderer extends ComponentRenderer {
 }
 
 
-class FiltersRenderer extends ComponentRenderer {
+class Filters extends ComponentRenderer {
     render() {
         let labeledCols = this.mapLevelColsToLabels(1)
         let content = []
@@ -105,7 +107,24 @@ class FiltersRenderer extends ComponentRenderer {
 }
 
 
-class TheadRenderer extends ComponentRenderer {
+export class Info extends ComponentRenderer {
+    render(start, nrows) {
+        let end = start + nrows
+        let filterInfo = this.data.isFiltered ? `[filtered from <code>${this.data.length}</code> records total]` : ""
+        return `<div class="moedertabel__explorer__info">
+            <div>Moedertabel Explorer</div>
+            <div data-table-info>
+                showing <code>${nrows}</code> records
+                (<code>${start}-${end}</code>)
+                of <code>${this.data.lengthView}</code> records
+                ${filterInfo}
+            </div>
+        </div>`
+    }
+}
+
+
+class Thead extends ComponentRenderer {
     render() {
         let n = 0
         let rows = []
@@ -194,8 +213,8 @@ class TheadRenderer extends ComponentRenderer {
 }
 
 
-export class TbodyRenderer extends ComponentRenderer {
-    render(start=0, nrows=25) {
+export class Tbody extends ComponentRenderer {
+    render(start, nrows) {
         if (this.data.dataview.length === 0) { return `<tbody></tbody>` }
         let index = this.renderIndeces(start, nrows)
         let rows = this.renderRows(start, nrows)
@@ -211,12 +230,12 @@ export class TbodyRenderer extends ComponentRenderer {
             return `<td
                 data-label="${labels[i]}"
                 data-dtype="${dtype}">
-                ${TbodyRenderer.format(val, dtype)}
+                ${Tbody.format(val, dtype)}
             </td>` }
         let getPanel = i => {
             return `<th
                 data-hide-target="${spans[i]}"
-                rowspan="${this.nrows}"
+                rowspan="${nrows}"
                 class="panel">
                 <span>${spans[i]}</span>
             </th>` }
@@ -255,7 +274,7 @@ export class TbodyRenderer extends ComponentRenderer {
 }
 
 
-export class DetailsRenderer extends ComponentRenderer {
+export class Details extends ComponentRenderer {
     getElement(n) {
         let el = document.createElement("div")
         el.innerHTML = this.render(n)
@@ -263,7 +282,6 @@ export class DetailsRenderer extends ComponentRenderer {
     }
 
     render(n) {
-        n = this.getRowNumber(parseInt(n))
         let labeledCols = this.mapLevelColsToLabels(1)
         let dtypesPerCol = this.mapDTypesToCols(1)
         let rowData = this.mapRowDataToCols(n, 1)
@@ -307,7 +325,7 @@ export class DetailsRenderer extends ComponentRenderer {
         return `<div>${col}</div>
         <div
         data-dtype="${dtypes[col]}">
-            ${DetailsRenderer.format(data[col], dtypes[col])}
+            ${Details.format(data[col], dtypes[col])}
         </div>`
     }
 }

@@ -41,7 +41,12 @@
 
 /* RECORDS */
 .moedertabel__explorer__records {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+        "navigator filters info"
+        "navigator filters table";
     width: 100%;
     font-size: .8em;
     overflow-x: hidden;
@@ -49,6 +54,7 @@
 
 /* NAVIGATOR */
 .moedertabel__explorer__navigator {
+    grid-area: navigator;
     display: flex;
     flex-direction: column;
 }
@@ -72,6 +78,7 @@
 
 /* FILTERS */
 .moedertabel__explorer__filters {
+    grid-area: filters;
     display: flex;
     flex-shrink: 0;
     /* overflow-y: auto; */
@@ -114,6 +121,7 @@
 
 /* TABLE */
 .moedertabel__explorer__table {
+    grid-area: table;
     overflow-x: auto;
     flex-grow: 1;
     width: 100%;
@@ -255,4 +263,27 @@ td:not([data-dtype="str"], [data-dtype="cat"]) {
 
 :is([data-hide-target], [data-record-target], [data-table-target]):hover {
     background: darkturquoise;
+}
+
+/* INFO */
+
+.moedertabel__explorer__info {
+    grid-area: info;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    background: gray;
+    color: white;
+    padding: .5rem;
+    border-bottom: solid 1px darkslategray;
+}
+
+.moedertabel__explorer__info div:first-child {
+    font-weight: 300;
+    font-variant: small-caps;
+    font-size: 1.5em;
+}
+
+.moedertabel__explorer__info code {
+    font-size: 1.25em;
 }

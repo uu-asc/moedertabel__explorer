@@ -1,14 +1,13 @@
 export class ComponentRenderer {
     constructor(data) {
         this.data = data
-        this.nrows = data.dataview.length
         this.nlevCols = this.getNLevels(data.columns)
         this.nlevRows = this.getNLevels(data.index)
     }
 
-    getElement() {
+    getElement(...args) {
         let el = document.createElement("div")
-        el.innerHTML = this.render()
+        el.innerHTML = this.render(...args)
         return el.firstElementChild
     }
 
@@ -86,12 +85,6 @@ export class ComponentRenderer {
         let DTypes = {}
         this.data.dtypes.columns.forEach((val, idx) => DTypes[this.data.columns[idx][level]] = val)
         return DTypes
-    }
-
-    getRowNumber(n) {
-        if (n < 0) { return this.nrows - 1 }
-        if (n >= this.nrows) { return 0 }
-        return n
     }
 
     static format(value, dtype) {
